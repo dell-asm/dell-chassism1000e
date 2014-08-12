@@ -2,10 +2,10 @@ require 'puppet/util/network_device/racadm'
 
 class Puppet::Util::NetworkDevice::Racadm::Facts
 
-  attr_reader :transport
+  attr_reader :client
 
-  def initialize(transport)
-    @transport = transport
+  def initialize(client)
+    @client = client
   end
 
   def retrieve
@@ -13,8 +13,10 @@ class Puppet::Util::NetworkDevice::Racadm::Facts
     [ 'getchassisname',
       'getassettag'
     ].each do |k|
-      @facts[k] = @transport.exec!(k)
+      @facts[k] = @client.exec!("racadm #{k}").chop
     end
+    @facts[:url] = @url
+    @facts
   end
 
 end
