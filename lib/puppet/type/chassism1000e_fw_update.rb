@@ -14,11 +14,16 @@ Puppet::Type.newtype(:chassism1000e_fw_update) do
   end
 
   newparam(:asm_hostname) do
-    desc "The host ip for the remote location of the firmware"
+    desc "The ip address for the remote location of the firmware"
   end
 
   newparam(:path) do
-    desc "The path for the remote location of the firmware"
+    desc "The path to the remote location of the firmware (on the network share)"
+    validate do |value|
+      unless File.exist? value
+        raise ArgumentError, "The path: %x does not exist" % value
+      end
+    end
   end
 
 end
